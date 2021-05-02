@@ -6,7 +6,7 @@
 
 ## Part 1:
 
-[LINK TO YOUR PUBLISHED SITE](https://nadagehad01.github.io/Lab5/)
+[LINK TO OUR PUBLISHED SITE](https://nadagehad01.github.io/Lab5/)
 
 ## Part 2:
 
