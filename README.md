@@ -10,4 +10,4 @@
 
 ## Part 2:
 
-LINK TO YOUR PART 2 REPOSITORY
+[LINK TO THE LATEST ISSUE IN OUR Github Actions: Continuous Integration REPO](https://github.com/nadagehad01/github-actions-for-ci/issues/7)
