@@ -9,10 +9,19 @@ const read = document.querySelector("[type='button']");
 const img_input = document.getElementById('image-input');
 const text1 = document.getElementById('text-top');
 const text2 = document.getElementById('text-bottom');
-const voice = document.getElementById('voice-selection');
+const voiceopt = document.getElementById('voice-selection');
 const form = document.getElementById('generate-meme');
 const ctx = canvas.getContext('2d');
+const vol = document.querySelector("[type='range']");
+const vol_img = document.getElementsByTagName("img")[0];
+const vol_group = document.getElementById("volume-group");
 
+var voices=[]
+setTimeout(() => {
+    populateVoiceList();
+}, 50);
+
+populateVoiceList();
 img.addEventListener('load', () => {
   submitmeme.disabled=false;
   reset.disabled=true;
@@ -42,6 +51,7 @@ submitmeme.addEventListener('click', (generate) => {
   submitmeme.disabled=true;
   reset.disabled=false;
   read.disabled=false;
+  voiceopt.disabled=false;
   ctx.font = "40px Arial";
   ctx.fillStyle = "white";
   ctx.strokeStyle = 'black';
@@ -51,8 +61,6 @@ submitmeme.addEventListener('click', (generate) => {
     ctx.strokeText(text2.value, canvas.width/2, canvas.height-10)
     ctx.fillText(text1.value, canvas.width/2, 40);
     ctx.fillText(text2.value, canvas.width/2, canvas.height-10)    
-  
-
 });
 
 reset.addEventListener('click', ()=>{
@@ -63,6 +71,57 @@ reset.addEventListener('click', ()=>{
   text1.value='';
   text2.value='';
 });
+
+
+
+function populateVoiceList() {
+  voices = speechSynthesis.getVoices();
+  voiceopt.remove(0);
+  for(var i = 0; i < voices.length ; i++) {
+    var option = document.createElement('option');
+    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+    if(voices[i].default) {
+      option.textContent += ' -- DEFAULT';
+    }
+
+    option.setAttribute('data-lang', voices[i].lang);
+    option.setAttribute('data-name', voices[i].name);
+    voiceopt.appendChild(option);
+  }
+  //The above function code has been taken from https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis
+}
+
+read.addEventListener('click', ()=>{
+  
+  var memesound = new SpeechSynthesisUtterance(text1.value+' '+text2.value);
+  memesound.volume=vol.value/100;
+  for(var i = 0; i < voices.length ; i++){
+    if(voices[i].name==voiceopt.selectedOptions[0].getAttribute('data-name')){
+      memesound.voice=voices[i];
+      break;
+    }
+  }
+  speechSynthesis.speak(memesound);
+
+});
+
+vol_group.addEventListener('input', value =>{
+  var num = Number(vol.value);
+  if(num>66){
+    vol_img.src="icons/volume-level-3.svg";
+  }
+  else if(num<66 && num>33){
+    vol_img.src="icons/volume-level-2.svg";
+  }
+  else if(num<34 && num>0){
+    vol_img.src="icons/volume-level-1.svg";
+  }
+  else if(num==0){
+    vol_img.src="icons/volume-level-0.svg";
+  }
+})
+
+
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
